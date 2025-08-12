@@ -1,20 +1,21 @@
 import { useEffect, useState } from 'react'
+import { Button, Flex, Form, Input, Modal, Space, Table, message } from 'antd'
+import type { ColumnsType } from 'antd/es/table'
+import { DeleteOutlined, PlusOutlined } from '@ant-design/icons'
 import { Guest } from '../types'
 import { apiGet, apiJson } from '../lib/api'
 
 export default function GuestsPage() {
   const [guests, setGuests] = useState<Guest[]>([])
   const [loading, setLoading] = useState(false)
-  const [form, setForm] = useState({ firstName: '', lastName: '', email: '', phone: '' })
-  const [error, setError] = useState<string | null>(null)
+  const [open, setOpen] = useState(false)
+  const [form] = Form.useForm()
 
   async function load() {
     setLoading(true)
     try {
       const data = await apiGet<Guest[]>('/api/guests')
       setGuests(data)
-    } catch (e: any) {
-      setError(e.message)
     } finally {
       setLoading(false)
     }
@@ -22,62 +23,62 @@ export default function GuestsPage() {
 
   useEffect(() => { load() }, [])
 
-  async function createGuest(e: React.FormEvent) {
-    e.preventDefault()
-    setError(null)
-    try {
-      await apiJson<Guest>('/api/guests', 'POST', form)
-      setForm({ firstName: '', lastName: '', email: '', phone: '' })
-      await load()
-    } catch (e: any) {
-      setError(e.message)
-    }
+  async function onCreate(values: any) {
+    await apiJson<Guest>('/api/guests', 'POST', values)
+    message.success('Guest added')
+    setOpen(false)
+    form.resetFields()
+    load()
   }
 
-  async function removeGuest(id: number) {
-    try {
-      await fetch(`/api/guests/${id}`, { method: 'DELETE' })
-      await load()
-    } catch (e: any) {
-      setError(e.message)
-    }
+  async function onDelete(guest: Guest) {
+    Modal.confirm({
+      title: `Delete ${guest.firstName} ${guest.lastName}?`,
+      okType: 'danger',
+      onOk: async () => {
+        await fetch(`/api/guests/${guest.id}`, { method: 'DELETE' })
+        message.success('Guest deleted')
+        load()
+      },
+    })
   }
+
+  const columns: ColumnsType<Guest> = [
+    { title: 'Name', key: 'name', render: (_, g) => `${g.firstName} ${g.lastName}` },
+    { title: 'Email', dataIndex: 'email', key: 'email' },
+    { title: 'Phone', dataIndex: 'phone', key: 'phone' },
+    { title: 'Actions', key: 'actions', render: (_, g) => (
+      <Space>
+        <Button icon={<DeleteOutlined />} danger onClick={() => onDelete(g)}>Delete</Button>
+      </Space>
+    ) },
+  ]
 
   return (
-    <div>
-      <h2>Guests</h2>
-      {error && <p style={{ color: 'crimson' }}>{error}</p>}
+    <Flex vertical gap={16}>
+      <Flex justify="space-between" align="center">
+        <h2 style={{ margin: 0 }}>Guests</h2>
+        <Button type="primary" icon={<PlusOutlined />} onClick={() => setOpen(true)}>New Guest</Button>
+      </Flex>
 
-      <form onSubmit={createGuest} style={{ display: 'grid', gap: 8, maxWidth: 420, marginBottom: 24 }}>
-        <input required placeholder="First name" value={form.firstName} onChange={e => setForm({ ...form, firstName: e.target.value })} />
-        <input required placeholder="Last name" value={form.lastName} onChange={e => setForm({ ...form, lastName: e.target.value })} />
-        <input required type="email" placeholder="Email" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} />
-        <input required placeholder="Phone" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} />
-        <button type="submit">Add Guest</button>
-      </form>
+      <Table rowKey="id" loading={loading} columns={columns} dataSource={guests} pagination={{ pageSize: 8 }} />
 
-      {loading ? <p>Loading...</p> : (
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-          <thead>
-            <tr>
-              <th align="left">Name</th>
-              <th align="left">Email</th>
-              <th align="left">Phone</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {guests.map(g => (
-              <tr key={g.id}>
-                <td>{g.firstName} {g.lastName}</td>
-                <td>{g.email}</td>
-                <td>{g.phone}</td>
-                <td><button onClick={() => removeGuest(g.id)}>Delete</button></td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
-    </div>
+      <Modal title="Add guest" open={open} onCancel={() => setOpen(false)} onOk={() => form.submit()} okText="Add">
+        <Form form={form} layout="vertical" onFinish={onCreate}>
+          <Form.Item label="First name" name="firstName" rules={[{ required: true }]}>
+            <Input />
+          </Form.Item>
+          <Form.Item label="Last name" name="lastName" rules={[{ required: true }]}>
+            <Input />
+          </Form.Item>
+          <Form.Item label="Email" name="email" rules={[{ required: true, type: 'email' }]}>
+            <Input />
+          </Form.Item>
+          <Form.Item label="Phone" name="phone" rules={[{ required: true }]}>
+            <Input />
+          </Form.Item>
+        </Form>
+      </Modal>
+    </Flex>
   )
 }
