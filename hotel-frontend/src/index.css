@@ -13,6 +13,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Ensure full-viewport layout */
+html, body, #root {
+  height: 100%;
+  min-height: 100vh;
+  width: 100%;
+}
+
 a {
   font-weight: 500;
   color: #646cff;
@@ -22,10 +29,9 @@ a:hover {
   color: #535bf2;
 }
 
+/* Remove centering and let Layout fill screen */
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
 }
