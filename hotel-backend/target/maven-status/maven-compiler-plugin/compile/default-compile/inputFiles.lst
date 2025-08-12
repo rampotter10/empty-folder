@@ -1,0 +1,16 @@
+/workspace/hotel-backend/src/main/java/com/example/hotel/config/DataLoader.java
+/workspace/hotel-backend/src/main/java/com/example/hotel/model/Booking.java
+/workspace/hotel-backend/src/main/java/com/example/hotel/repository/GuestRepository.java
+/workspace/hotel-backend/src/main/java/com/example/hotel/model/Room.java
+/workspace/hotel-backend/src/main/java/com/example/hotel/config/WebConfig.java
+/workspace/hotel-backend/src/main/java/com/example/hotel/controller/GuestController.java
+/workspace/hotel-backend/src/main/java/com/example/hotel/repository/RoomRepository.java
+/workspace/hotel-backend/src/main/java/com/example/hotel/service/BookingService.java
+/workspace/hotel-backend/src/main/java/com/example/hotel/dto/CreateBookingRequest.java
+/workspace/hotel-backend/src/main/java/com/example/hotel/HotelBackendApplication.java
+/workspace/hotel-backend/src/main/java/com/example/hotel/model/RoomType.java
+/workspace/hotel-backend/src/main/java/com/example/hotel/model/BookingStatus.java
+/workspace/hotel-backend/src/main/java/com/example/hotel/model/Guest.java
+/workspace/hotel-backend/src/main/java/com/example/hotel/repository/BookingRepository.java
+/workspace/hotel-backend/src/main/java/com/example/hotel/controller/BookingController.java
+/workspace/hotel-backend/src/main/java/com/example/hotel/controller/RoomController.java
