@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Button, Flex, Form, Input, Modal, Space, Table, message } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons'
-import { Guest } from '../types'
+import type { Guest } from '../types'
 import { apiGet, apiJson } from '../lib/api'
 
 export default function GuestsPage() {

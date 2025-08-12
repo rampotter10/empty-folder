@@ -1,7 +1,7 @@
 import { Card, Col, Row, Statistic } from 'antd'
 import { useEffect, useState } from 'react'
 import { apiGet } from '../lib/api'
-import { Room, Guest, Booking } from '../types'
+import type { Room, Guest, Booking } from '../types'
 
 export default function Dashboard() {
   const [rooms, setRooms] = useState<Room[]>([])

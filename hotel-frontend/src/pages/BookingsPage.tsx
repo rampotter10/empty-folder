@@ -3,7 +3,7 @@ import { Button, DatePicker, Flex, Form, Modal, Select, Space, Table, Tag, messa
 import type { ColumnsType } from 'antd/es/table'
 import { StopOutlined, PlusOutlined } from '@ant-design/icons'
 import dayjs from 'dayjs'
-import { Booking, BookingStatus, CreateBookingRequest, Guest, Room } from '../types'
+import type { Booking, BookingStatus, CreateBookingRequest, Guest, Room } from '../types'
 import { apiGet, apiJson } from '../lib/api'
 
 export default function BookingsPage() {
